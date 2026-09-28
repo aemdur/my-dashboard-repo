@@ -1,0 +1,491 @@
+{
+  "datasets": [
+    {
+      "name": "7b014a60",
+      "displayName": "gold_top_drugs_by_spending",
+      "config": {
+        "version": "1.1",
+        "source": "pbm.nadac_pipeline.gold_top_drugs_by_spending",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          },
+          {
+            "name": "total_prescriptions_num",
+            "expr": "CASE\n  WHEN source.total_prescriptions LIKE '% M' THEN CAST(TRIM(SUBSTRING(source.total_prescriptions, 1, LENGTH(source.total_prescriptions) - 2)) AS DECIMAL(28,2)) * 1000000\n  WHEN source.total_prescriptions LIKE '% K' THEN CAST(TRIM(SUBSTRING(source.total_prescriptions, 1, LENGTH(source.total_prescriptions) - 2)) AS DECIMAL(28,2)) * 1000\n  WHEN source.total_prescriptions LIKE '% B' THEN CAST(TRIM(SUBSTRING(source.total_prescriptions, 1, LENGTH(source.total_prescriptions) - 2)) AS DECIMAL(28,2)) * 1000000000\n  ELSE TRY_CAST(source.total_prescriptions AS DECIMAL(28,2))\nEND",
+            "displayName": "Total Prescriptions"
+          },
+          {
+            "name": "drug_name_base",
+            "expr": "TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1))",
+            "displayName": "Drug Name (Base)"
+          },
+          {
+            "name": "therapeutic_use",
+            "expr": "CASE \n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BIKTARVY' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'DUPIXENT' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'HUMIRA' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OZEMPIC' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'INVEGA SUSTENNA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SKYRIZI' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'DESCOVY' THEN 'HIV Treatment and PrEP'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ENBREL' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'KISQALI' THEN 'Oncology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) IN ('COSENTYX UNOREADY', 'COSENTYX', 'COSENTYX SENSOREADY') THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ELIQUIS' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'GENOTROPIN' THEN 'Endocrinology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VRAYLAR' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'JARDIANCE' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'NURTEC ODT' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'STELARA' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SUBOXONE' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) IN ('INVEGA HAFYERA', 'INVEGA TRINZA') THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'KESIMPTA' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TREMFYA' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SIMPONI' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'UZEDY ER' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) IN ('AVONEX', 'AVONEX PEN') THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BIMZELX' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TALTZ' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SANDOSTATIN LAR DEPOT' THEN 'Endocrinology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LUPRON DEPOT' THEN 'Oncology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CIMZIA' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'MOUNJARO' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TRULICITY' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ZEPBOUND' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'WEGOVY' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VYVANSE' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'RINVOQ ER' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ABILIFY MAINTENA ER' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SYMBICORT' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'INGREZZA' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'FARXIGA' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'NORDITROPIN FLEXPRO' THEN 'Endocrinology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CAPLYTA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'REXULTI' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'MAVYRET' THEN 'Infectious Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TRELEGY ELLIPTA' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SPRAVATO' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'UBRELVY' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'XARELTO' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CREON DR' THEN 'Gastroenterology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'DAPAGLIFLOZIN' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'DOVATO' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OTEZLA' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'AUSTEDO XR' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LINZESS' THEN 'Gastroenterology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VIVITROL' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BAQSIMI' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ALBUTEROL HFA' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VALTOCO' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ARISTADA ER' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VELPHORO' THEN 'Nephrology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BUPRENORPHINE' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BRIVIACT' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SOFOSBUVIR' THEN 'Infectious Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'XGEVA' THEN 'Oncology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'FLUTICASONE PROPIONATE HFA' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'GENVOYA TABLET' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'JANUVIA' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'QELBREE ER' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LANTUS SOLOSTAR' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SYMTUZA' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'QULIPTA' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VENTOLIN HFA' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'RYBELSUS' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'EMGALITY' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'XCOPRI' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'RESTASIS' THEN 'Dry Eye Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SPIRIVA RESPIMAT' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CONCERTA ER' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LYBALVI' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'INSULIN LISPRO' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TIVICAY' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'EPINEPHRINE' THEN 'Severe Allergic Reactions (Anaphylaxis)'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SPRYCEL' THEN 'Leukemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ABILIFY ASIMTUFII' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'REPATHA' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'AJOVY' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OPZELURA' THEN 'Atopic Dermatitis, Vitiligo'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TRINTELLIX' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PULMOZYME' THEN 'Cystic Fibrosis'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'FULPHILA' THEN 'Chemotherapy-Induced Neutropenia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TRIUMEQ' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'REMICADE' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'AUSTEDO' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ODEFSEY TABLET' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'AUVELITY ER' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ORENCIA CLICKJECT' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'METFORMIN HCL' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) IN ('ADVAIR', 'ADVAIR HFA') THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'HUMIRA PEN' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ZENPEP DR' THEN 'Gastroenterology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PAXLOVID' THEN 'COVID-19'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LISDEXAMFETAMINE' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ZORYVE' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'DULERA' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'GABAPENTIN' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'FLUTICASONE PROP' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BUDESONIDE' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OLUMIANT' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'JORNAY PM' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ENTRESTO' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'AIMOVIG' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'IBUPROFEN' THEN 'Pain, Inflammation'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'XELJANZ XR' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'AMOXICILLIN' THEN 'Bacterial Infections'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VENOFER' THEN 'Iron Deficiency Anemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'HUMALOG' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'METHYLPHENIDATE ER' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VEMLIDY' THEN 'Hepatitis B'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LIDOCAINE' THEN 'Pain, Local Anesthesia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ATORVASTATIN' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BREZTRI AEROSPHERE' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'MYRBETRIQ ER' THEN 'Overactive Bladder'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ANORO ELLIPTA' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OMNITROPE' THEN 'Endocrinology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TRADJENTA' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'QUILLIVANT XR' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CETIRIZINE HCL' THEN 'Allergies'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BASAGLAR' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'RYBELSUS' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SPIRIVA RESPIMAT' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'AJOVY' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'EMGALITY' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'NAYZILAM' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'INSULIN LISPRO' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TIVICAY' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'JULUCA' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TRIUMEQ' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SPRYCEL' THEN 'Leukemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'RESTASIS' THEN 'Dry Eye Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OPZELURA' THEN 'Atopic Dermatitis, Vitiligo'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PULMOZYME' THEN 'Cystic Fibrosis'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'FULPHILA' THEN 'Chemotherapy-Induced Neutropenia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'REMICADE' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'REPATHA' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ABILIFY ASIMTUFII' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'EBGLYSS' THEN 'Atopic Dermatitis'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ACCRUFER' THEN 'Iron Deficiency Anemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SIKLOS' THEN 'Sickle Cell Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LEXAPRO' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SERTRALINE HCL' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ZOLOFT' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PROZAC' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CELEXA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CYMBALTA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'EFFEXOR XR' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'WELLBUTRIN XL' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PRISTIQ' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TRINTELLIX' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VIIBRYD' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LATUDA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SEROQUEL XR' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'RISPERDAL' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ZYPREXA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ADDERALL XR' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CONCERTA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'STRATTERA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'FOCALIN XR' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'INTUNIV' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'KAPVAY' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'RITALIN LA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'DAYTRANA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TYVASO' THEN 'Pulmonary Arterial Hypertension'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OPSUMIT' THEN 'Pulmonary Arterial Hypertension'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'UPTRAVI' THEN 'Pulmonary Arterial Hypertension'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ADEMPAS' THEN 'Pulmonary Hypertension'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ORENITRAM' THEN 'Pulmonary Arterial Hypertension'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'IMBRUVICA' THEN 'Blood Cancer, Leukemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CALQUENCE' THEN 'Blood Cancer, Leukemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VENCLEXTA' THEN 'Leukemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'REVLIMID' THEN 'Multiple Myeloma'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'POMALYST' THEN 'Multiple Myeloma'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'THALOMID' THEN 'Multiple Myeloma'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'DARZALEX' THEN 'Multiple Myeloma'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'JAKAFI' THEN 'Blood Cancer, Myelofibrosis'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TASIGNA' THEN 'Leukemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BOSULIF' THEN 'Leukemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'IBRANCE' THEN 'Oncology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VERZENIO' THEN 'Oncology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'FASLODEX' THEN 'Oncology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'XTANDI' THEN 'Prostate Cancer'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ERLEADA' THEN 'Prostate Cancer'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ZYTIGA' THEN 'Prostate Cancer'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'KEYTRUDA' THEN 'Cancer Immunotherapy'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OPDIVO' THEN 'Cancer Immunotherapy'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TECENTRIQ' THEN 'Cancer Immunotherapy'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LISINOPRIL' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LOSARTAN' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'AMLODIPINE' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CARVEDILOL' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'METOPROLOL' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'HYDROCHLOROTHIAZIDE' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'FUROSEMIDE' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SPIRONOLACTONE' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'WARFARIN' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CLOPIDOGREL' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PLAVIX' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PRADAXA' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LEVOTHYROXINE' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SYNTHROID' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PREDNISONE' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OMEPRAZOLE' THEN 'Acid Reflux, GERD'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PANTOPRAZOLE' THEN 'Acid Reflux, GERD'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ESOMEPRAZOLE' THEN 'Acid Reflux, GERD'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'NEXIUM' THEN 'Acid Reflux, GERD'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PROTONIX' THEN 'Acid Reflux, GERD'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('LYBALVI', 'ABILIFY ASIMTUFII', 'TRINTELLIX', 'AUVELITY ER', 'SERTRALINE HCL', 'TRAZODONE', 'BUPROPION HCL XL', 'DULOXETINE HCL DR', 'FLUOXETINE HCL', 'ESCITALOPRAM', 'ADDERALL XR', 'QUILLIVANT XR', 'ATOMOXETINE HCL') THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('SPRYCEL', 'SIKLOS', 'FULPHILA', 'NEULASTA', 'UDENYCA') THEN 'Oncology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('ZENPEP DR', 'MYRBETRIQ ER', 'IBSRELA') THEN 'Gastroenterology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('PAXLOVID', 'AMOXICILLIN', 'AMOX') THEN 'Infectious Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('GABAPENTIN', 'PREGABALIN') THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('RESTASIS', 'XIIDRA') THEN 'Ophthalmology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('OMNITROPE', 'INSULIN ASPART FLEXPEN', 'HUMULIN R', 'NOVOLOG', 'KERENDIA') THEN 'Endocrinology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('OPZELURA', 'SLYND') THEN 'Dermatology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('VENOFER', 'ACCRUFER') THEN 'Nephrology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('ADVAIR HFA', 'COMBIVENT RESPIMAT', 'SPIRIVA HANDIHALER', 'PULMOZYME') THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('XELJANZ', 'COBENFY') THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('WEGOVY', 'ZEPBOUND', 'RYBELSUS', 'INSULIN LISPRO', 'HUMALOG', 'BASAGLAR', 'INSULIN ASPART', 'HUMALOG KWIKPEN', 'TRADJENTA', 'NOVOLIN R', 'VICTOZA', 'APIDRA', 'TOUJEO SOLOSTAR', 'TRESIBA FLEXTOUCH') THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('TIVICAY', 'TRIUMEQ', 'JULUCA', 'ODEFSEY TABLET', 'CIMDUO', 'BIKTARVY TABLET', 'STRIBILD') THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('COSENTYX', 'SIMPONI ARIA', 'REMICADE', 'ORENCIA', 'HUMIRA PEN', 'SILIQ') THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('CONCERTA ER', 'AZSTARYS', 'MYDAYIS', 'FOCALIN XR', 'STRATTERA', 'INTUNIV ER', 'GUANFACINE ER', 'CLONIDINE ER') THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('FLOVENT HFA', 'ARNUITY ELLIPTA', 'BREO ELLIPTA', 'BREZTRI AEROSPHERE', 'ANORO ELLIPTA', 'INCRUSE ELLIPTA', 'PROAIR HFA', 'PROAIR DIGIHALER', 'QVAR REDIHALER', 'ATROVENT HFA') THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('ENTRESTO', 'REPATHA', 'PRALUENT', 'LISINOPRIL', 'LOSARTAN', 'AMLODIPINE', 'CARVEDILOL', 'METOPROLOL', 'ATENOLOL', 'RAMIPRIL', 'VALSARTAN', 'IRBESARTAN', 'ROSUVASTATIN', 'SIMVASTATIN', 'PRAVASTATIN') THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('SKYLA', 'LILETTA', 'KYLEENA', 'MIRENA', 'PARAGARD', 'NEXPLANON', 'ANNOVERA', 'PHEXXI') THEN 'Women''s Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('CONTRAVE', 'SAXENDA', 'QSYMIA') THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('VUMERITY', 'TECFIDERA', 'MAYZENT', 'ZEPOSIA', 'COPAXONE', 'GLATIRAMER ACETATE', 'AUBAGIO', 'TYSABRI', 'OCREVUS', 'LEMTRADA') THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('SKYRIZI PEN', 'COSENTYX PEN', 'DUPIXENT PEN', 'STELARA IV') THEN 'Already Mapped Parent Drug'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('LEVOTHYROXINE', 'SYNTHROID', 'ARMOUR THYROID', 'CYTOMEL', 'LIOTHYRONINE') THEN 'Endocrinology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('METFORMIN HCL', 'GLIPIZIDE', 'GLYBURIDE', 'PIOGLITAZONE', 'GLIMEPIRIDE', 'ACARBOSE') THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('VEMLIDY', 'BARACLUDE', 'VIREAD') THEN 'Infectious Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('ENTRESTO', 'JARDIANCE', 'FARXIGA') THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('LYRICA', 'LYRICA CR', 'CYMBALTA', 'EFFEXOR XR', 'PRISTIQ', 'WELLBUTRIN SR', 'WELLBUTRIN XL', 'ZOLOFT', 'LEXAPRO', 'PROZAC', 'CELEXA', 'PAXIL', 'REMERON', 'VENLAFAXINE ER', 'ESCITALOPRAM OXALATE', 'PAROXETINE HCL') THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('PROLIA', 'EVENITY', 'FORTEO', 'TYMLOS', 'TERIPARATIDE') THEN 'Endocrinology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('LATUDA', 'SEROQUEL', 'SEROQUEL XR', 'ZYPREXA', 'GEODON', 'RISPERDAL', 'ABILIFY', 'CLOZAPINE', 'OLANZAPINE', 'QUETIAPINE', 'RISPERIDONE', 'ARIPIPRAZOLE', 'ZIPRASIDONE') THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('WARFARIN', 'APIXABAN', 'RIVAROXABAN', 'EDOXABAN', 'DABIGATRAN', 'HEPARIN', 'ENOXAPARIN', 'LOVENOX') THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('HYDROCHLOROTHIAZIDE', 'FUROSEMIDE', 'LASIX', 'CHLORTHALIDONE', 'TORSEMIDE', 'BUMETANIDE', 'SPIRONOLACTONE', 'TRIAMTERENE') THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('LANTUS', 'LEVEMIR', 'TRESIBA', 'TOUJEO', 'SEMGLEE', 'NOVOLOG FLEXPEN', 'FIASP', 'ADMELOG') THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('CONCERTA ER', 'LYBALVI', 'ABILIFY ASIMTUFII', 'TRINTELLIX', 'DEXTROAMP', 'ADDERALL', 'ADDERALL XR', 'VENLAFAXINE', 'DULOXETINE', 'BUSPIRONE', 'SERTRALINE', 'FLUOXETINE', 'ESCITALOPRAM', 'BUPROPION', 'MIRTAZAPINE', 'DESVENLAFAXINE') THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('AJOVY', 'ZENBRACE', 'IMITREX', 'VYEPTI', 'ONZETRA XSAIL') THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('REPATHA', 'ENTRESTO', 'ELIQUIS', 'ATORVASTATIN', 'CLOPIDOGREL') THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('SPRYCEL', 'FULPHILA', 'NEULASTA', 'ZARXIO', 'NIVESTYM', 'UDENYCA') THEN 'Oncology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('PULMOZYME', 'TRIKAFTA', 'KALYDECO', 'ORKAMBI', 'SYMDEKO') THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('TIVICAY', 'TRIUMEQ', 'GENVOYA', 'JULUCA', 'CABENUVA', 'VOCABRIA', 'REKAMBYS', 'APRETUDE') THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('INSULIN LISPRO', 'INSULIN ASPART', 'INSULIN GLARGINE', 'NOVOLIN', 'NOVOLOG', 'HUMALOG') THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('PAXLOVID', 'TAMIFLU', 'OSELTAMIVIR', 'LAGEVRIO', 'MOLNUPIRAVIR') THEN 'Infectious Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('EPINEPHRINE', 'EPIPEN', 'AUVI Q', 'ADRENACLICK', 'SYMJEPI') THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('REMICADE', 'ORENCIA', 'SIMPONI ARIA', 'ACTEMRA', 'KEVZARA', 'OLUMIANT') THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('OZEMPIC PEN', 'JARDIANCE TABLET', 'TRULICITY PEN', 'FARXIGA TABLET', 'INSULIN GLARGINE SOLOSTAR') THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('GABAPENTIN', 'PREGABALIN', 'LYRICA', 'LYRICA CR', 'GRALISE', 'HORIZANT', 'NEURONTIN') THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('OXYCODONE', 'HYDROCODONE', 'MORPHINE', 'OXYCONTIN', 'DILAUDID', 'FENTANYL', 'TRAMADOL', 'CODEINE', 'HYDROMORPHONE') THEN 'Pain Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('SKYLA', 'LILETTA', 'KYLEENA', 'MIRENA', 'PARAGARD', 'NEXPLANON', 'ANNOVERA', 'PHEXXI', 'LO LOESTRIN FE', 'ORTHO TRI CYCLEN', 'YAZ', 'NUVARING') THEN 'Women''s Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('AMOXICILLIN', 'AZITHROMYCIN', 'CIPROFLOXACIN', 'LEVOFLOXACIN', 'CEPHALEXIN', 'DOXYCYCLINE', 'CLINDAMYCIN', 'METRONIDAZOLE', 'SULFAMETHOXAZOLE', 'BACTRIM') THEN 'Infectious Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('OMEPRAZOLE', 'PANTOPRAZOLE', 'LANSOPRAZOLE', 'ESOMEPRAZOLE', 'RABEPRAZOLE', 'NEXIUM', 'PROTONIX', 'PRILOSEC', 'PREVACID', 'DEXILANT') THEN 'Gastroenterology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('PREDNISONE', 'PREDNISOLONE', 'METHYLPREDNISOLONE', 'DEXAMETHASONE', 'HYDROCORTISONE', 'CORTISONE', 'TRIAMCINOLONE', 'BUDESONIDE') THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('ALLOPURINOL', 'COLCHICINE', 'PROBENECID', 'FEBUXOSTAT', 'ULORIC', 'MITIGARE', 'COLCRYS') THEN 'Rheumatology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('MONTELUKAST', 'SINGULAIR', 'ZAFIRLUKAST', 'ACCOLATE', 'ZILEUTON', 'ZYFLO') THEN 'Respiratory'\n  ELSE 'Other Therapeutic Use'\nEND",
+            "displayName": "Therapeutic Use"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "4be2b3a4",
+      "displayName": "Top Hundred Drugs Ranked by Spending Insights",
+      "queryLines": [
+        "select *\n",
+        "from pbm.nadac_pipeline.gold_top_drugs_by_spending\n",
+        "order by total_spending\n",
+        "limit(100)"
+      ]
+    },
+    {
+      "name": "03913b26",
+      "displayName": "gold_top_100_ndc_price",
+      "config": {
+        "version": "1.1",
+        "source": "pbm.nadac_pipeline.gold_top_100_ndc_price",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          },
+          {
+            "name": "drug_name_base",
+            "expr": "TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1))",
+            "displayName": "Drug Name (Base)"
+          },
+          {
+            "name": "therapeutic_use",
+            "expr": "CASE \n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BIKTARVY' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'DUPIXENT' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'HUMIRA' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OZEMPIC' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'INVEGA SUSTENNA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SKYRIZI' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'DESCOVY' THEN 'HIV Treatment and PrEP'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ENBREL' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'KISQALI' THEN 'Oncology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) IN ('COSENTYX UNOREADY', 'COSENTYX', 'COSENTYX SENSOREADY') THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ELIQUIS' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'GENOTROPIN' THEN 'Endocrinology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VRAYLAR' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'JARDIANCE' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'NURTEC ODT' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'STELARA' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SUBOXONE' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) IN ('INVEGA HAFYERA', 'INVEGA TRINZA') THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'KESIMPTA' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TREMFYA' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SIMPONI' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'UZEDY ER' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) IN ('AVONEX', 'AVONEX PEN') THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BIMZELX' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TALTZ' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SANDOSTATIN LAR DEPOT' THEN 'Endocrinology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LUPRON DEPOT' THEN 'Oncology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CIMZIA' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'MOUNJARO' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TRULICITY' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ZEPBOUND' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'WEGOVY' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VYVANSE' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'RINVOQ ER' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ABILIFY MAINTENA ER' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SYMBICORT' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'INGREZZA' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'FARXIGA' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'NORDITROPIN FLEXPRO' THEN 'Endocrinology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CAPLYTA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'REXULTI' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'MAVYRET' THEN 'Infectious Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TRELEGY ELLIPTA' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SPRAVATO' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'UBRELVY' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'XARELTO' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CREON DR' THEN 'Gastroenterology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'DAPAGLIFLOZIN' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'DOVATO' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OTEZLA' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'AUSTEDO XR' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LINZESS' THEN 'Gastroenterology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VIVITROL' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BAQSIMI' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ALBUTEROL HFA' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VALTOCO' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ARISTADA ER' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VELPHORO' THEN 'Nephrology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BUPRENORPHINE' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BRIVIACT' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SOFOSBUVIR' THEN 'Infectious Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'XGEVA' THEN 'Oncology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'FLUTICASONE PROPIONATE HFA' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'GENVOYA TABLET' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'JANUVIA' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'QELBREE ER' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LANTUS SOLOSTAR' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SYMTUZA' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'QULIPTA' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VENTOLIN HFA' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'RYBELSUS' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'EMGALITY' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'XCOPRI' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'RESTASIS' THEN 'Ophthalmology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SPIRIVA RESPIMAT' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CONCERTA ER' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LYBALVI' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'INSULIN LISPRO' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TIVICAY' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'EPINEPHRINE' THEN 'Severe Allergic Reactions (Anaphylaxis)'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SPRYCEL' THEN 'Leukemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ABILIFY ASIMTUFII' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'REPATHA' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'AJOVY' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OPZELURA' THEN 'Atopic Dermatitis, Vitiligo'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TRINTELLIX' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PULMOZYME' THEN 'Cystic Fibrosis'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'FULPHILA' THEN 'Chemotherapy-Induced Neutropenia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TRIUMEQ' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'REMICADE' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'AUSTEDO' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ODEFSEY TABLET' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'AUVELITY ER' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ORENCIA CLICKJECT' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'METFORMIN HCL' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) IN ('ADVAIR', 'ADVAIR HFA') THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'HUMIRA PEN' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ZENPEP DR' THEN 'Gastroenterology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PAXLOVID' THEN 'COVID-19'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LISDEXAMFETAMINE' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ZORYVE' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'DULERA' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'GABAPENTIN' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'FLUTICASONE PROP' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BUDESONIDE' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OLUMIANT' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'JORNAY PM' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ENTRESTO' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'AIMOVIG' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'IBUPROFEN' THEN 'Pain, Inflammation'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'XELJANZ XR' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'AMOXICILLIN' THEN 'Bacterial Infections'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VENOFER' THEN 'Iron Deficiency Anemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'HUMALOG' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'METHYLPHENIDATE ER' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VEMLIDY' THEN 'Hepatitis B'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LIDOCAINE' THEN 'Pain, Local Anesthesia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ATORVASTATIN' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BREZTRI AEROSPHERE' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'MYRBETRIQ ER' THEN 'Overactive Bladder'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ANORO ELLIPTA' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OMNITROPE' THEN 'Endocrinology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TRADJENTA' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'QUILLIVANT XR' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CETIRIZINE HCL' THEN 'Allergies'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BASAGLAR' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'RYBELSUS' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SPIRIVA RESPIMAT' THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'AJOVY' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'EMGALITY' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'NAYZILAM' THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'INSULIN LISPRO' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TIVICAY' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'JULUCA' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TRIUMEQ' THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SPRYCEL' THEN 'Leukemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'RESTASIS' THEN 'Ophthalmology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OPZELURA' THEN 'Atopic Dermatitis, Vitiligo'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PULMOZYME' THEN 'Cystic Fibrosis'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'FULPHILA' THEN 'Chemotherapy-Induced Neutropenia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'REMICADE' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'REPATHA' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ABILIFY ASIMTUFII' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'EBGLYSS' THEN 'Atopic Dermatitis'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ACCRUFER' THEN 'Iron Deficiency Anemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SIKLOS' THEN 'Sickle Cell Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LEXAPRO' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SERTRALINE HCL' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ZOLOFT' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PROZAC' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CELEXA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CYMBALTA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'EFFEXOR XR' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'WELLBUTRIN XL' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PRISTIQ' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TRINTELLIX' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VIIBRYD' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LATUDA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SEROQUEL XR' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'RISPERDAL' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ZYPREXA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ADDERALL XR' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CONCERTA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'STRATTERA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'FOCALIN XR' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'INTUNIV' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'KAPVAY' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'RITALIN LA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'DAYTRANA' THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TYVASO' THEN 'Pulmonary Arterial Hypertension'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OPSUMIT' THEN 'Pulmonary Arterial Hypertension'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'UPTRAVI' THEN 'Pulmonary Arterial Hypertension'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ADEMPAS' THEN 'Pulmonary Hypertension'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ORENITRAM' THEN 'Pulmonary Arterial Hypertension'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'IMBRUVICA' THEN 'Blood Cancer, Leukemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CALQUENCE' THEN 'Blood Cancer, Leukemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VENCLEXTA' THEN 'Leukemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'REVLIMID' THEN 'Multiple Myeloma'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'POMALYST' THEN 'Multiple Myeloma'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'THALOMID' THEN 'Multiple Myeloma'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'DARZALEX' THEN 'Multiple Myeloma'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'JAKAFI' THEN 'Blood Cancer, Myelofibrosis'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TASIGNA' THEN 'Leukemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'BOSULIF' THEN 'Leukemia'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'IBRANCE' THEN 'Oncology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'VERZENIO' THEN 'Oncology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'FASLODEX' THEN 'Oncology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'XTANDI' THEN 'Prostate Cancer'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ERLEADA' THEN 'Prostate Cancer'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ZYTIGA' THEN 'Prostate Cancer'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'KEYTRUDA' THEN 'Cancer Immunotherapy'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OPDIVO' THEN 'Cancer Immunotherapy'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'TECENTRIQ' THEN 'Cancer Immunotherapy'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LISINOPRIL' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LOSARTAN' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'AMLODIPINE' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CARVEDILOL' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'METOPROLOL' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'HYDROCHLOROTHIAZIDE' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'FUROSEMIDE' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SPIRONOLACTONE' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'WARFARIN' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'CLOPIDOGREL' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PLAVIX' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PRADAXA' THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'LEVOTHYROXINE' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'SYNTHROID' THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PREDNISONE' THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'OMEPRAZOLE' THEN 'Acid Reflux, GERD'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PANTOPRAZOLE' THEN 'Acid Reflux, GERD'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'ESOMEPRAZOLE' THEN 'Acid Reflux, GERD'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'NEXIUM' THEN 'Acid Reflux, GERD'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) = 'PROTONIX' THEN 'Acid Reflux, GERD'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('LYBALVI', 'ABILIFY ASIMTUFII', 'TRINTELLIX', 'AUVELITY ER', 'SERTRALINE HCL', 'TRAZODONE', 'BUPROPION HCL XL', 'DULOXETINE HCL DR', 'FLUOXETINE HCL', 'ESCITALOPRAM', 'ADDERALL XR', 'QUILLIVANT XR', 'ATOMOXETINE HCL') THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('SPRYCEL', 'SIKLOS', 'FULPHILA', 'NEULASTA', 'UDENYCA') THEN 'Oncology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('ZENPEP DR', 'MYRBETRIQ ER', 'IBSRELA') THEN 'Gastroenterology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('PAXLOVID', 'AMOXICILLIN', 'AMOX') THEN 'Infectious Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('GABAPENTIN', 'PREGABALIN') THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('RESTASIS', 'XIIDRA') THEN 'Ophthalmology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('OMNITROPE', 'INSULIN ASPART FLEXPEN', 'HUMULIN R', 'NOVOLOG', 'KERENDIA') THEN 'Endocrinology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('OPZELURA', 'SLYND') THEN 'Dermatology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('VENOFER', 'ACCRUFER') THEN 'Nephrology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('ADVAIR HFA', 'COMBIVENT RESPIMAT', 'SPIRIVA HANDIHALER', 'PULMOZYME') THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('XELJANZ', 'COBENFY') THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('WEGOVY', 'ZEPBOUND', 'RYBELSUS', 'INSULIN LISPRO', 'HUMALOG', 'BASAGLAR', 'INSULIN ASPART', 'HUMALOG KWIKPEN', 'TRADJENTA', 'NOVOLIN R', 'VICTOZA', 'APIDRA', 'TOUJEO SOLOSTAR', 'TRESIBA FLEXTOUCH') THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('TIVICAY', 'TRIUMEQ', 'JULUCA', 'ODEFSEY TABLET', 'CIMDUO', 'BIKTARVY TABLET', 'STRIBILD') THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('COSENTYX', 'SIMPONI ARIA', 'REMICADE', 'ORENCIA', 'HUMIRA PEN', 'SILIQ') THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('CONCERTA ER', 'AZSTARYS', 'MYDAYIS', 'FOCALIN XR', 'STRATTERA', 'INTUNIV ER', 'GUANFACINE ER', 'CLONIDINE ER') THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('FLOVENT HFA', 'ARNUITY ELLIPTA', 'BREO ELLIPTA', 'BREZTRI AEROSPHERE', 'ANORO ELLIPTA', 'INCRUSE ELLIPTA', 'PROAIR HFA', 'PROAIR DIGIHALER', 'QVAR REDIHALER', 'ATROVENT HFA') THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('ENTRESTO', 'REPATHA', 'PRALUENT', 'LISINOPRIL', 'LOSARTAN', 'AMLODIPINE', 'CARVEDILOL', 'METOPROLOL', 'ATENOLOL', 'RAMIPRIL', 'VALSARTAN', 'IRBESARTAN', 'ROSUVASTATIN', 'SIMVASTATIN', 'PRAVASTATIN') THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('SKYLA', 'LILETTA', 'KYLEENA', 'MIRENA', 'PARAGARD', 'NEXPLANON', 'ANNOVERA', 'PHEXXI') THEN 'Women''s Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('CONTRAVE', 'SAXENDA', 'QSYMIA') THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('VUMERITY', 'TECFIDERA', 'MAYZENT', 'ZEPOSIA', 'COPAXONE', 'GLATIRAMER ACETATE', 'AUBAGIO', 'TYSABRI', 'OCREVUS', 'LEMTRADA') THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('SKYRIZI PEN', 'COSENTYX PEN', 'DUPIXENT PEN', 'STELARA IV') THEN 'Already Mapped Parent Drug'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('LEVOTHYROXINE', 'SYNTHROID', 'ARMOUR THYROID', 'CYTOMEL', 'LIOTHYRONINE') THEN 'Endocrinology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('METFORMIN HCL', 'GLIPIZIDE', 'GLYBURIDE', 'PIOGLITAZONE', 'GLIMEPIRIDE', 'ACARBOSE') THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('VEMLIDY', 'BARACLUDE', 'VIREAD') THEN 'Infectious Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('ENTRESTO', 'JARDIANCE', 'FARXIGA') THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('LYRICA', 'LYRICA CR', 'CYMBALTA', 'EFFEXOR XR', 'PRISTIQ', 'WELLBUTRIN SR', 'WELLBUTRIN XL', 'ZOLOFT', 'LEXAPRO', 'PROZAC', 'CELEXA', 'PAXIL', 'REMERON', 'VENLAFAXINE ER', 'ESCITALOPRAM OXALATE', 'PAROXETINE HCL') THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('PROLIA', 'EVENITY', 'FORTEO', 'TYMLOS', 'TERIPARATIDE') THEN 'Endocrinology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('LATUDA', 'SEROQUEL', 'SEROQUEL XR', 'ZYPREXA', 'GEODON', 'RISPERDAL', 'ABILIFY', 'CLOZAPINE', 'OLANZAPINE', 'QUETIAPINE', 'RISPERIDONE', 'ARIPIPRAZOLE', 'ZIPRASIDONE') THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('WARFARIN', 'APIXABAN', 'RIVAROXABAN', 'EDOXABAN', 'DABIGATRAN', 'HEPARIN', 'ENOXAPARIN', 'LOVENOX') THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('HYDROCHLOROTHIAZIDE', 'FUROSEMIDE', 'LASIX', 'CHLORTHALIDONE', 'TORSEMIDE', 'BUMETANIDE', 'SPIRONOLACTONE', 'TRIAMTERENE') THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('LANTUS', 'LEVEMIR', 'TRESIBA', 'TOUJEO', 'SEMGLEE', 'NOVOLOG FLEXPEN', 'FIASP', 'ADMELOG') THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('CONCERTA ER', 'LYBALVI', 'ABILIFY ASIMTUFII', 'TRINTELLIX', 'DEXTROAMP', 'ADDERALL', 'ADDERALL XR', 'VENLAFAXINE', 'DULOXETINE', 'BUSPIRONE', 'SERTRALINE', 'FLUOXETINE', 'ESCITALOPRAM', 'BUPROPION', 'MIRTAZAPINE', 'DESVENLAFAXINE') THEN 'Mental Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('AJOVY', 'ZENBRACE', 'IMITREX', 'VYEPTI', 'ONZETRA XSAIL') THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('REPATHA', 'ENTRESTO', 'ELIQUIS', 'ATORVASTATIN', 'CLOPIDOGREL') THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('SPRYCEL', 'FULPHILA', 'NEULASTA', 'ZARXIO', 'NIVESTYM', 'UDENYCA') THEN 'Oncology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('PULMOZYME', 'TRIKAFTA', 'KALYDECO', 'ORKAMBI', 'SYMDEKO') THEN 'Respiratory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('TIVICAY', 'TRIUMEQ', 'GENVOYA', 'JULUCA', 'CABENUVA', 'VOCABRIA', 'REKAMBYS', 'APRETUDE') THEN 'HIV Treatment'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('INSULIN LISPRO', 'INSULIN ASPART', 'INSULIN GLARGINE', 'NOVOLIN', 'NOVOLOG', 'HUMALOG') THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('PAXLOVID', 'TAMIFLU', 'OSELTAMIVIR', 'LAGEVRIO', 'MOLNUPIRAVIR') THEN 'Infectious Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('EPINEPHRINE', 'EPIPEN', 'AUVI Q', 'ADRENACLICK', 'SYMJEPI') THEN 'Cardiovascular & Heart Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('REMICADE', 'ORENCIA', 'SIMPONI ARIA', 'ACTEMRA', 'KEVZARA', 'OLUMIANT') THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('OZEMPIC PEN', 'JARDIANCE TABLET', 'TRULICITY PEN', 'FARXIGA TABLET', 'INSULIN GLARGINE SOLOSTAR') THEN 'Diabetes and Weight Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('GABAPENTIN', 'PREGABALIN', 'LYRICA', 'LYRICA CR', 'GRALISE', 'HORIZANT', 'NEURONTIN') THEN 'Neurological'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('OXYCODONE', 'HYDROCODONE', 'MORPHINE', 'OXYCONTIN', 'DILAUDID', 'FENTANYL', 'TRAMADOL', 'CODEINE', 'HYDROMORPHONE') THEN 'Pain Management'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('SKYLA', 'LILETTA', 'KYLEENA', 'MIRENA', 'PARAGARD', 'NEXPLANON', 'ANNOVERA', 'PHEXXI', 'LO LOESTRIN FE', 'ORTHO TRI CYCLEN', 'YAZ', 'NUVARING') THEN 'Women''s Health'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('AMOXICILLIN', 'AZITHROMYCIN', 'CIPROFLOXACIN', 'LEVOFLOXACIN', 'CEPHALEXIN', 'DOXYCYCLINE', 'CLINDAMYCIN', 'METRONIDAZOLE', 'SULFAMETHOXAZOLE', 'BACTRIM') THEN 'Infectious Disease'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('OMEPRAZOLE', 'PANTOPRAZOLE', 'LANSOPRAZOLE', 'ESOMEPRAZOLE', 'RABEPRAZOLE', 'NEXIUM', 'PROTONIX', 'PRILOSEC', 'PREVACID', 'DEXILANT') THEN 'Gastroenterology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('PREDNISONE', 'PREDNISOLONE', 'METHYLPREDNISOLONE', 'DEXAMETHASONE', 'HYDROCORTISONE', 'CORTISONE', 'TRIAMCINOLONE', 'BUDESONIDE') THEN 'Autoimmune & Inflammatory'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('ALLOPURINOL', 'COLCHICINE', 'PROBENECID', 'FEBUXOSTAT', 'ULORIC', 'MITIGARE', 'COLCRYS') THEN 'Rheumatology'\n  WHEN TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\\\\\\\\\\\\\s]+)', 1)) IN ('MONTELUKAST', 'SINGULAIR', 'ZAFIRLUKAST', 'ACCOLATE', 'ZILEUTON', 'ZYFLO') THEN 'Respiratory'\n  ELSE 'Other Therapeutic Use'\nEND",
+            "displayName": "Therapeutic Use"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "drug_therapeutic_mapping",
+      "displayName": "Drug Therapeutic Mapping",
+      "queryLines": [
+        "SELECT\n",
+        "  drug_name_base,\n",
+        "  CASE\n",
+        "    WHEN drug_name_base = 'BIKTARVY' THEN 'HIV Treatment'\n",
+        "    WHEN drug_name_base = 'DUPIXENT' THEN 'Eczema, Asthma, Chronic Rhinosinusitis'\n",
+        "    WHEN drug_name_base = 'HUMIRA' THEN 'Rheumatoid Arthritis, Crohn''s Disease, Psoriasis'\n",
+        "    WHEN drug_name_base = 'OZEMPIC' THEN 'Type 2 Diabetes'\n",
+        "    WHEN drug_name_base = 'INVEGA SUSTENNA' THEN 'Schizophrenia, Schizoaffective Disorder'\n",
+        "    WHEN drug_name_base = 'SKYRIZI' THEN 'Plaque Psoriasis, Psoriatic Arthritis, Crohn''s Disease'\n",
+        "    WHEN drug_name_base = 'DESCOVY' THEN 'HIV Treatment and PrEP'\n",
+        "    WHEN drug_name_base = 'ENBREL' THEN 'Rheumatoid Arthritis, Psoriasis, Psoriatic Arthritis'\n",
+        "    WHEN drug_name_base = 'KISQALI' THEN 'Breast Cancer'\n",
+        "    WHEN drug_name_base = 'COSENTYX UNOREADY' THEN 'Psoriatic Arthritis, Ankylosing Spondylitis'\n",
+        "    WHEN drug_name_base = 'COSENTYX' THEN 'Psoriatic Arthritis, Ankylosing Spondylitis'\n",
+        "    WHEN drug_name_base = 'COSENTYX SENSOREADY' THEN 'Psoriatic Arthritis, Ankylosing Spondylitis'\n",
+        "    WHEN drug_name_base = 'ELIQUIS' THEN 'Blood Clot Prevention, Atrial Fibrillation'\n",
+        "    WHEN drug_name_base = 'GENOTROPIN' THEN 'Growth Hormone Deficiency'\n",
+        "    WHEN drug_name_base = 'VRAYLAR' THEN 'Schizophrenia, Bipolar Disorder'\n",
+        "    WHEN drug_name_base = 'JARDIANCE' THEN 'Type 2 Diabetes, Heart Failure'\n",
+        "    WHEN drug_name_base = 'NURTEC ODT' THEN 'Migraine Treatment and Prevention'\n",
+        "    WHEN drug_name_base = 'STELARA' THEN 'Plaque Psoriasis, Crohn''s Disease, Ulcerative Colitis'\n",
+        "    WHEN drug_name_base = 'SUBOXONE' THEN 'Opioid Use Disorder'\n",
+        "    WHEN drug_name_base = 'INVEGA HAFYERA' THEN 'Schizophrenia'\n",
+        "    WHEN drug_name_base = 'INVEGA TRINZA' THEN 'Schizophrenia'\n",
+        "    WHEN drug_name_base = 'KESIMPTA' THEN 'Multiple Sclerosis'\n",
+        "    WHEN drug_name_base = 'TREMFYA' THEN 'Plaque Psoriasis, Psoriatic Arthritis'\n",
+        "    WHEN\n",
+        "      drug_name_base = 'SIMPONI'\n",
+        "    THEN\n",
+        "      'Rheumatoid Arthritis, Psoriatic Arthritis, Ulcerative Colitis'\n",
+        "    WHEN drug_name_base = 'UZEDY ER' THEN 'Schizophrenia'\n",
+        "    WHEN drug_name_base = 'AVONEX' THEN 'Multiple Sclerosis'\n",
+        "    WHEN drug_name_base = 'AVONEX PEN' THEN 'Multiple Sclerosis'\n",
+        "    WHEN drug_name_base = 'BIMZELX' THEN 'Plaque Psoriasis'\n",
+        "    WHEN\n",
+        "      drug_name_base = 'TALTZ'\n",
+        "    THEN\n",
+        "      'Plaque Psoriasis, Psoriatic Arthritis, Ankylosing Spondylitis'\n",
+        "    WHEN drug_name_base = 'SANDOSTATIN LAR DEPOT' THEN 'Acromegaly, Carcinoid Syndrome'\n",
+        "    WHEN drug_name_base = 'LUPRON DEPOT' THEN 'Prostate Cancer, Endometriosis, Fibroids'\n",
+        "    WHEN\n",
+        "      drug_name_base = 'CIMZIA'\n",
+        "    THEN\n",
+        "      'Rheumatoid Arthritis, Crohn''s Disease, Psoriatic Arthritis'\n",
+        "    ELSE 'Other Therapeutic Use'\n",
+        "  END as therapeutic_use\n",
+        "FROM\n",
+        "  (\n",
+        "    SELECT DISTINCT\n",
+        "      TRIM(REGEXP_EXTRACT(drug_name, '^([A-Za-z\\\\s]+)', 1)) as drug_name_base\n",
+        "    FROM\n",
+        "      pbm.nadac_pipeline.gold_top_drugs_by_spending\n",
+        "  )"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "combined_analysis",
+      "displayName": "Drugs w/ Spend > $700M",
+      "layout": [
+        {
+          "widget": {
+            "name": "scatter_plot",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "7b014a60",
+                  "fields": [
+                    {
+                      "name": "drug_name_base",
+                      "expression": "`drug_name_base`"
+                    },
+                    {
+                      "name": "therapeutic_use",
+                      "expression": "`therapeutic_use`"
+                    },
+                    {
+                      "name": "sum(total_prescriptions_num)",
+                      "expression": "SUM(`total_prescriptions_num`)"
+                    },
+                    {
+                      "name": "sum(total_spending_raw)",
+                      "expression": "SUM(`total_spending_raw`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`total_spending_raw` >= 200000000"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Outlier Analysis: Prescriptions vs Spending",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "scatter",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(total_prescriptions_num)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "displayName": "Total Prescriptions",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(total_spending_raw)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "displayName": "Total Spending",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "drug_name_base",
+                  "legend": {
+                    "hide": true
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "extra": [
+                  {
+                    "fieldName": "therapeutic_use"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "spending_by_therapeutic",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "7b014a60",
+                  "fields": [
+                    {
+                      "name": "sum(total_spending_raw)",
+                      "expression": "SUM(`total_spending_raw`)"
+                    },
+                    {
+                      "name": "therapeutic_use",
+                      "expression": "`therapeutic_use`"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`total_spending_raw` IN (`total_spending_raw`) OR TRUE"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Top Spending by Therapeutic Category",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(total_spending_raw)",
+                  "axis": {
+                    "title": "Total Spending"
+                  },
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "therapeutic_use",
+                  "axis": {
+                    "title": "Therapeutic Category"
+                  },
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "x-reversed"
+                    }
+                  }
+                },
+                "label": {
+                  "show": false
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 7,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "drug_spending_chart",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "7b014a60",
+                  "fields": [
+                    {
+                      "name": "drug_name_base",
+                      "expression": "`drug_name_base`"
+                    },
+                    {
+                      "name": "sum(total_spending_raw)",
+                      "expression": "SUM(`total_spending_raw`)"
+                    },
+                    {
+                      "name": "avg_nadac_price",
+                      "expression": "`avg_nadac_price`"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "IN_RANGE(`total_spending_raw`, NULL, NULL)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Spending by NADAC Drug Price",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(total_spending_raw)",
+                  "axis": {
+                    "title": "Total Spending"
+                  },
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 0
+                    }
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "avg_nadac_price",
+                  "axis": {
+                    "title": "Avg NADAC Price"
+                  },
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "natural-order-reversed"
+                    }
+                  }
+                },
+                "label": {
+                  "show": false
+                },
+                "extra": [
+                  {
+                    "fieldName": "drug_name_base"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 7,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "a9ef1f51",
+            "queries": [
+              {
+                "name": "dashboards/01f1b5d9910c1fe79d7b53560bfb5c4a/datasets/01f1b5e0f1d11cec92aeee4bd6080cc7_total_spending_raw",
+                "query": {
+                  "datasetName": "7b014a60",
+                  "fields": [
+                    {
+                      "name": "min(total_spending_raw)",
+                      "expression": "MIN(`total_spending_raw`)"
+                    },
+                    {
+                      "name": "max(total_spending_raw)",
+                      "expression": "MAX(`total_spending_raw`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true
+              },
+              "widgetType": "range-slider",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "total_spending_raw",
+                    "queryName": "dashboards/01f1b5d9910c1fe79d7b53560bfb5c4a/datasets/01f1b5e0f1d11cec92aeee4bd6080cc7_total_spending_raw"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 1
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
