@@ -1,1 +1,2 @@
-https://dbc-40a7f636-b522.cloud.databricks.com/dashboardsv3/01f1b5d9910c1fe79d7b53560bfb5c4a/published?o=7474651342164964&f_combined_analysis%7Efdbef088.n=1000000%7E&f_combined_analysis%7Espending_bracket_filter.s=Over%2520%2524600M&f_combined_analysis%7Edrug_name_filter.s=ator
+[https://dbc-40a7f636-b522.cloud.databricks.com/dashboardsv3/01f1b5d9910c1fe79d7b53560bfb5c4a/published?o=7474651342164964&f_combined_analysis%7Efdbef088.n=1000000%7E&f_combined_analysis%7Espending_bracket_filter.s=Over%2520%2524600M&f_combined_analysis%7Edrug_name_filter.s=ator
+](https://dbc-40a7f636-b522.cloud.databricks.com/dashboardsv3/01f1bde7e4b91984b80d35f396da066f/published?o=7474651342164964)
